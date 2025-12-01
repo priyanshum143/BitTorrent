@@ -1,4 +1,5 @@
 #include "torrent/torrent_meta.hpp"
+#include "torrent/tracker.hpp"
 #include "torrent/bencode.hpp"
 #include <iostream>
 
@@ -8,19 +9,19 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    std::string file_path = argv[1];
-
     try {
-        torrent::TorrentMeta meta = torrent::parse_torrent_file(file_path);
+        torrent::TorrentMeta meta = torrent::parse_torrent_file(argv[1]);
 
-        std::cout << "Tracker URL: "   << meta.announce << "\n";
-        std::cout << "Length: "        << meta.length << "\n";
+        std::cout << "Tracker URL: " << meta.announce << "\n";
+        std::cout << "Length: "      << meta.length << "\n";
 
-        std::string info_hash_hex = torrent::sha1(meta.info_bencoded);
-        std::cout << "Info Hash: "    << info_hash_hex << "\n";
+        std::string peer_id = "12233344441223334444";
+        torrent::TrackerResponse tr = torrent::request_peers(meta, peer_id);
 
-        std::cout << "Piece Length: "  << meta.piece_length << "\n";
-        std::cout << "Num Pieces: "    << meta.piece_hashes.size() << "\n";
+        std::cout << "Peers from tracker:\n";
+        for (const auto& p : tr.peers) {
+            std::cout << p.ip << ":" << p.port << "\n";
+        }
     }
     catch (const std::exception& ex) {
         std::cerr << "Error: " << ex.what() << "\n";

@@ -2,7 +2,6 @@
 #include "torrent/bencode.hpp"
 
 #include <nlohmann/json.hpp>
-#include <stdexcept>
 
 namespace torrent {
 
