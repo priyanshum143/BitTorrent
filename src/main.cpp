@@ -6,6 +6,8 @@
 #include "torrent/torrent_meta.hpp"
 #include "torrent/tracker.hpp"
 #include "torrent/peer.hpp"
+#include "torrent/string_utils.hpp"
+
 
 using namespace torrent;
 
@@ -15,19 +17,6 @@ static void print_usage(const char* prog) {
         << "  " << prog << " info <torrent_file>\n"
         << "  " << prog << " peers <torrent_file>\n"
         << "  " << prog << " handshake <torrent_file> <host:port>\n";
-}
-
-static void split_host_port(
-    const std::string& arg,
-    std::string& host,
-    std::string& port_str
-) {
-    auto pos = arg.find(':');
-    if (pos == std::string::npos) {
-        throw std::runtime_error("expected <host>:<port>, got: " + arg);
-    }
-    host = arg.substr(0, pos);
-    port_str = arg.substr(pos + 1);
 }
 
 int main(int argc, char** argv) {
@@ -73,7 +62,7 @@ int main(int argc, char** argv) {
 
             // Parse <host:port> argument into a Peer
             std::string host, port_str;
-            split_host_port(argv[3], host, port_str);
+            torrent::split_host_port(argv[3], host, port_str);
             std::uint16_t port = static_cast<std::uint16_t>(std::stoi(port_str));
 
             Peer peer{host, port};
@@ -87,6 +76,28 @@ int main(int argc, char** argv) {
 
             std::cerr << "Handshake successful with "
                       << conn->remote_ip() << ":" << conn->remote_port() << "\n";
+        }
+        else if (command == "download_piece") {
+            if (argc < 5) {
+                std::cerr << "Usage: " << argv[0] << " download_piece <torrent_file> <piece_index> <host:port>\n";
+                return 1;
+            }
+
+            TorrentMeta meta = parse_torrent_file(torrent_path);
+
+            std::uint32_t piece_index = static_cast<std::uint32_t>(std::stoul(argv[3]));
+
+            std::string host, port_str;
+            split_host_port(argv[4], host, port_str);
+            std::uint16_t port = static_cast<std::uint16_t>(std::stoi(port_str));
+
+            Peer peer{host, port};
+
+            auto conn = PeerConnection::connect_and_handshake(meta, peer, peer_id);
+
+            auto data = download_piece_from_peer(conn->socket_fd(), meta, piece_index);
+
+            std::cout.write(reinterpret_cast<const char*>(data.data()), data.size());
         }
         else {
             print_usage(argv[0]);

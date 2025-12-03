@@ -9,6 +9,10 @@ add_library(
         src/bencode.cpp
         src/torrent_meta.cpp
         src/tracker.cpp
+        src/peer.cpp
+        src/peer_messages.cpp
+        src/piece_downloader.cpp
+        src/net_utils.cpp
 )
 
 target_include_directories(torrent_lib PUBLIC

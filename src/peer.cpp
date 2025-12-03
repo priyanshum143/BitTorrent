@@ -1,5 +1,7 @@
 #include "torrent/peer.hpp"
 #include "torrent/bencode.hpp"
+#include "torrent/net_utils.hpp"
+#include "torrent/string_utils.hpp"
 
 #include <stdexcept>
 #include <iostream>
@@ -8,7 +10,6 @@
 #include <cstring>
 #include <sstream>
 
-// For sockets
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -52,38 +53,6 @@ namespace torrent {
         std::memcpy(&hs[48], peer_id.data(), 20);
 
         return hs;
-    }
-
-
-    // ----------------- Low-level I/O helpers (from your code) -----------------
-
-    static void write_all(int fd, const void* buf, std::size_t len) {
-        const std::uint8_t* p = static_cast<const std::uint8_t*>(buf);
-        std::size_t total = 0;
-        while (total < len) {
-            ssize_t n = ::send(fd, p + total, len - total, 0);
-            if (n <= 0) throw std::runtime_error("write_all: send failed");
-            total += static_cast<std::size_t>(n);
-        }
-    }
-
-    static void read_exact(int fd, void* buf, std::size_t len) {
-        std::uint8_t* p = static_cast<std::uint8_t*>(buf);
-        std::size_t total = 0;
-        while (total < len) {
-            ssize_t n = ::recv(fd, p + total, len - total, 0);
-            if (n <= 0) throw std::runtime_error("read_exact: recv failed");
-            total += static_cast<std::size_t>(n);
-        }
-    }
-
-    static void split_host_port(const std::string& arg, std::string& host, std::string& port_str) {
-        auto pos = arg.find(':');
-        if (pos == std::string::npos) {
-            throw std::runtime_error("expected <host>:<port>, got: " + arg);
-        }
-        host = arg.substr(0, pos);
-        port_str = arg.substr(pos + 1);
     }
 
 
