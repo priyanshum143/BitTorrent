@@ -99,6 +99,21 @@ int main(int argc, char** argv) {
 
             std::cout.write(reinterpret_cast<const char*>(data.data()), data.size());
         }
+        else if (command == "download") {
+            if (argc < 5 || std::string(argv[2]) != "-o") {
+                std::cerr << "Usage: " << argv[0] << " download -o <output_path> <torrent_file>\n";
+                return 1;
+            }
+
+            std::string output_path = argv[3];
+            std::string torrent_path = argv[4];
+
+            TorrentMeta meta = parse_torrent_file(torrent_path);
+
+            const std::string peer_id = "12233344441223334444";
+
+            download_file_single_peer(meta, peer_id, output_path);
+        }
         else {
             print_usage(argv[0]);
             return 1;

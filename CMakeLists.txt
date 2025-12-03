@@ -13,6 +13,7 @@ add_library(
         src/peer_messages.cpp
         src/piece_downloader.cpp
         src/net_utils.cpp
+        src/file_downloader.cpp
 )
 
 target_include_directories(torrent_lib PUBLIC
