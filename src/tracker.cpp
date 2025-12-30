@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <sstream>
 #include <vector>
+#include <curl/curl.h>
+#include <iostream>
 
 namespace torrent {
 
@@ -17,6 +19,12 @@ namespace torrent {
         long status = 0;
         std::string body;
     };
+
+    static size_t write_cb(char* ptr, size_t size, size_t nmemb, void* userdata) {
+        auto* out = static_cast<std::string*>(userdata);
+        out->append(ptr, size * nmemb);
+        return size * nmemb;
+    }
 
     HttpResp http_get(const std::string& url) {
         CURL* curl = curl_easy_init();
@@ -63,6 +71,7 @@ namespace torrent {
 
 
     // ----------------- Public API -----------------
+    static std::vector<Peer> parse_compact_peers(const std::string& peers_bin);
 
     TrackerResponse request_peers(const TorrentMeta& meta, const std::string& peer_id) {
         TrackerResponse result;

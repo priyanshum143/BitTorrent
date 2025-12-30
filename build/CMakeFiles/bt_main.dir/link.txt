@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -Wl,--dependency-file=CMakeFiles/bt_main.dir/link.d CMakeFiles/bt_main.dir/src/main.cpp.o -o bt_main  libtorrent_lib.a /usr/lib/x86_64-linux-gnu/libcurl.so /usr/lib/x86_64-linux-gnu/libcrypto.so

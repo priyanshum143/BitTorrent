@@ -1,11 +1,11 @@
 #include "torrent/bencode.hpp"
 
+#include <openssl/sha.h>
 #include <fstream>
 #include <stdexcept>
 #include <cctype>
 #include <sstream>
 #include <iomanip>
-// #include <openssl/sha.h>
 
 namespace torrent {
 
@@ -329,13 +329,23 @@ namespace torrent {
     // ---------------- Hashing and Helpers ----------------
 
     std::string sha1(const std::string& input) {
-        // TEMPORARY: return 40 zeros (hex)
-        return std::string(40, '0');
+        std::string raw = sha1_raw(input);
+
+        std::ostringstream oss;
+        oss << std::hex << std::setfill('0');
+        for (unsigned char c : raw) {
+            oss << std::setw(2) << static_cast<int>(c);
+        }
+        return oss.str();
     }
 
     std::string sha1_raw(const std::string& input) {
-        // TEMPORARY: return 20 zero bytes
-        return std::string(20, '\0');
+        unsigned char hash[SHA_DIGEST_LENGTH];
+        SHA1(reinterpret_cast<const unsigned char*>(input.data()),
+            input.size(),
+            hash);
+
+        return std::string(reinterpret_cast<const char*>(hash), SHA_DIGEST_LENGTH); // 20 bytes
     }
 
     std::string percent_encode_bytes(const std::string& bytes) {

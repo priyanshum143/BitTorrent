@@ -4,6 +4,8 @@
 #include <vector>
 #include <optional>
 
+#include <arpa/inet.h>
+
 namespace torrent {
 
     enum class MsgId : std::uint8_t {
@@ -30,7 +32,7 @@ namespace torrent {
     std::vector<std::uint8_t> build_request(
         std::uint32_t piece_index,
         std::uint32_t begin,
-        std::uint32_t length,
+        std::uint32_t length
     );
 
     BtMessage read_message(int sock_fd);

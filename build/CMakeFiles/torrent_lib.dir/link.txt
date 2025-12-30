@@ -1,0 +1,2 @@
+/usr/bin/ar qc libtorrent_lib.a CMakeFiles/torrent_lib.dir/src/bencode.cpp.o CMakeFiles/torrent_lib.dir/src/torrent_meta.cpp.o CMakeFiles/torrent_lib.dir/src/tracker.cpp.o CMakeFiles/torrent_lib.dir/src/peer.cpp.o CMakeFiles/torrent_lib.dir/src/peer_messages.cpp.o CMakeFiles/torrent_lib.dir/src/piece_downloader.cpp.o CMakeFiles/torrent_lib.dir/src/net_utils.cpp.o CMakeFiles/torrent_lib.dir/src/file_downloader.cpp.o
+/usr/bin/ranlib libtorrent_lib.a

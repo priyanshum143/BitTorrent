@@ -1,0 +1,4 @@
+/home/priyanshu/Files/BitTorrent/build/CMakeFiles/torrent_lib.dir
+/home/priyanshu/Files/BitTorrent/build/CMakeFiles/bt_main.dir
+/home/priyanshu/Files/BitTorrent/build/CMakeFiles/edit_cache.dir
+/home/priyanshu/Files/BitTorrent/build/CMakeFiles/rebuild_cache.dir

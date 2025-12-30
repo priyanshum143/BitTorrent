@@ -28,6 +28,8 @@ namespace torrent {
 
         std::string remote_ip() const { return m_peer.ip; }
         std::uint16_t remote_port() const { return m_peer.port; }
+
+        int socket_fd() const { return m_socket_fd; }
     private:
         PeerConnection(
             const TorrentMeta& meta,

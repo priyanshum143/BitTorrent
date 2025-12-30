@@ -7,6 +7,8 @@
 #include "torrent/tracker.hpp"
 #include "torrent/peer.hpp"
 #include "torrent/string_utils.hpp"
+#include "torrent/piece_downloader.hpp"
+#include "torrent/file_downloader.hpp"
 
 
 using namespace torrent;

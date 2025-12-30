@@ -1,6 +1,9 @@
 #include "torrent/torrent_meta.hpp"
 #include "torrent/bencode.hpp"
+#include "torrent/string_utils.hpp"
 
+#include <stdexcept>
+#include <iostream>
 #include <nlohmann/json.hpp>
 
 namespace torrent {
@@ -44,6 +47,20 @@ namespace torrent {
 
         // 6. info_hash_raw
         std::string raw = sha1_raw(meta.info_bencoded);
+        auto hex = [](const std::string& s) {
+            static const char* dig = "0123456789abcdef";
+            std::string out;
+            out.reserve(s.size() * 2);
+            for (unsigned char c : s) {
+                out.push_back(dig[c >> 4]);
+                out.push_back(dig[c & 0xF]);
+            }
+            return out;
+        };
+
+        if (raw.size() != 20) {
+            throw std::runtime_error("sha1_raw must return 20 raw bytes, got " + std::to_string(raw.size()));
+        }
         for (std::size_t i = 0; i < 20; ++i) {
             meta.info_hash_raw[i] = static_cast<std::uint8_t>(
                 static_cast<unsigned char>(raw[i])
