@@ -1,6 +1,6 @@
 # BitTorrent
 
-A simple, educational **BitTorrent client written in C++**.
+A simple **BitTorrent client written in C++**.
 
 This project demonstrates how BitTorrent works internally by implementing the core parts of the protocol:
 
@@ -74,14 +74,6 @@ This will:
 * Install required dependencies
 * Build the project
 
-To download a file using the sample torrent:
-
-```bash
-./setup.sh --run-download --torrent sample.torrent --out out.bin
-```
-
-The downloaded file will be saved as `out.bin`.
-
 ---
 
 ### Windows (via WSL – Recommended)
@@ -99,11 +91,10 @@ On Windows, it runs **inside WSL (Windows Subsystem for Linux)** automatically.
 
 If WSL is not installed, the script will clearly tell you how to install it.
 
-To download a file:
+The setup script will:
 
-```powershell
-.\setup.ps1 -RunDownload -Torrent .\sample.torrent -Out out.bin
-```
+* Install required dependencies
+* Build the project
 
 ---
 
@@ -179,45 +170,6 @@ This confirms successful communication with a peer.
 
 ---
 
-## Why This Project Exists
-
-This project helps you understand:
-
-* How `.torrent` files are structured
-* How `info_hash` is calculated
-* How trackers and peers communicate
-* How files are split into pieces and downloaded
-
-It is useful for:
-
-* Learning networking concepts
-* Understanding BitTorrent internals
-* Systems programming practice
-* Interview preparation
-
----
-
-## Troubleshooting
-
-### No peers found
-
-* The torrent may be inactive
-* Try a different torrent file
-
-### Permission denied when running setup.sh
-
-Run:
-
-```bash
-chmod +x setup.sh
-```
-
-### Windows WSL issues
-
-Follow the instructions printed by `setup.ps1`.
-WSL installation is automatic on modern Windows systems.
-
----
 
 ## License
 
