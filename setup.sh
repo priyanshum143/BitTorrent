@@ -3,29 +3,19 @@ set -euo pipefail
 
 # Usage:
 #   ./setup.sh
-#   ./setup.sh --run-download --torrent sample.torrent --out out.bin
 #
 # This script:
 #  - installs system deps (best-effort)
 #  - configures + builds the project
-#  - optionally runs the download command
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="${ROOT_DIR}/build"
 
-RUN_DOWNLOAD=0
-TORRENT=""
-OUT="out.bin"
-
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --run-download) RUN_DOWNLOAD=1; shift ;;
-    --torrent) TORRENT="${2:-}"; shift 2 ;;
-    --out) OUT="${2:-out.bin}"; shift 2 ;;
     -h|--help)
       echo "Usage:"
       echo "  ./setup.sh"
-      echo "  ./setup.sh --run-download --torrent <file.torrent> --out <output.bin>"
       exit 0
       ;;
     *)
@@ -100,21 +90,6 @@ build_project() {
   echo "[setup] Build complete: ${BUILD_DIR}/bt_main"
 }
 
-run_download() {
-  if [[ -z "${TORRENT}" ]]; then
-    echo "[setup] --torrent is required with --run-download"
-    exit 1
-  fi
-  if [[ ! -f "${TORRENT}" ]]; then
-    echo "[setup] Torrent file not found: ${TORRENT}"
-    exit 1
-  fi
-
-  echo "[setup] Running download..."
-  "${BUILD_DIR}/bt_main" download -o "${OUT}" "${TORRENT}"
-  echo "[setup] Download finished: ${OUT}"
-}
-
 OS="$(uname -s)"
 case "${OS}" in
   Linux)  install_linux_deps ;;
@@ -127,9 +102,5 @@ case "${OS}" in
 esac
 
 build_project
-
-if [[ "${RUN_DOWNLOAD}" -eq 1 ]]; then
-  run_download
-fi
 
 echo "[setup] Done."

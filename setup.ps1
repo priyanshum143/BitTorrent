@@ -1,9 +1,3 @@
-param(
-  [switch]$RunDownload = $false,
-  [string]$Torrent = "",
-  [string]$Out = "out.bin"
-)
-
 $ErrorActionPreference = "Stop"
 
 function Has-Wsl {
@@ -44,25 +38,5 @@ echo "[setup] Built: build/bt_main"
 "@
 
 wsl bash -lc $buildCmd
-
-if ($RunDownload) {
-  if ([string]::IsNullOrWhiteSpace($Torrent)) {
-    Write-Host "[setup] --Torrent is required with -RunDownload"
-    exit 1
-  }
-
-  # Convert torrent path to WSL path if it's a Windows path
-  $torrentPath = (Resolve-Path $Torrent).Path
-  $wslTorrentPath = wsl wslpath -a "$torrentPath"
-  $wslOutPath = wsl wslpath -a (Join-Path $repoPath $Out)
-
-  $runCmd = @"
-set -euo pipefail
-cd "$wslRepoPath"
-./build/bt_main download -o "$wslOutPath" "$wslTorrentPath"
-echo "[setup] Download finished: $wslOutPath"
-"@
-  wsl bash -lc $runCmd
-}
 
 Write-Host "[setup] Done."
